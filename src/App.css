@@ -30,6 +30,8 @@ h2 {
   column-gap: 12px;
   justify-content: flex-start;
   align-items: center;
+  width: 100%;
+  overflow-y: scroll;
 }
 .list-item{
   width: 45px;
@@ -38,8 +40,9 @@ h2 {
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  border: 1px solid #EEEEEE;
+  border: 1px solid #000000;
   font-size: 14px;
+  padding: 8px;
 }
 .button{
   background-color: #FFFFFF;

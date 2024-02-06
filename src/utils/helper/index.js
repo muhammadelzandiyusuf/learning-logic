@@ -1,4 +1,4 @@
 import calculateDiagonalSum from './calculateDiagonalSum';
-import palindrome from './palindrome';
+import isCircularPalindrome from './isCircularPalindrome';
 
-export { calculateDiagonalSum, palindrome };
+export { calculateDiagonalSum, isCircularPalindrome };

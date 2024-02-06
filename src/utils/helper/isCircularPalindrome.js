@@ -1,4 +1,4 @@
-export default function palindrome(value) {
+export default function isCircularPalindrome(value) {
     let isPalindrome = false;
     const palindrome = value.split("").reverse().join("");
 

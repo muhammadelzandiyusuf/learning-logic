@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { calculateDiagonalSum, palindrome } from './utils/helper';
+import { calculateDiagonalSum, isCircularPalindrome } from './utils/helper';
 
 import './App.css';
 
@@ -15,10 +15,10 @@ function App() {
     setStone(results)
   }, []);
 
-    const handlePalindrome = useCallback((data) => {
-        const results = palindrome(data.palindrome);
-        setIsPalindrome(results)
-    }, []);
+  const handlePalindrome = useCallback((data) => {
+    const results = isCircularPalindrome(data.palindrome);
+    setIsPalindrome(results)
+  }, []);
 
   return (
     <div className="app">

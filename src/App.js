@@ -52,7 +52,7 @@ function App() {
           <input
             className="input"
             type="number"
-            placeholder="Masukan jumlah N"
+            placeholder="Input N"
             {...register("number")}
           />
           <button className="button" type="submit">Submit</button>
@@ -77,7 +77,7 @@ function App() {
           <input
             className="input"
             type="text"
-            placeholder="Input kata"
+            placeholder="Input word"
             {...register("palindrome")}
           />
           <button className="button" type="submit">Submit</button>
@@ -90,7 +90,7 @@ function App() {
           <input
             className="input"
             type="number"
-            placeholder="Masukan angka"
+            placeholder="Input number"
             {...register("selfNumber")}
           />
           <button className="button" type="submit">Submit</button>
@@ -109,7 +109,7 @@ function App() {
           <input
             className="input"
             type="text"
-            placeholder="Input kata dan emoji"
+            placeholder="Input word and emoji"
             {...register("decrypt")}
           />
           <button className="button" type="submit">Submit</button>

@@ -1,13 +1,21 @@
-import { useCallback, useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import { useForm } from 'react-hook-form';
-import { calculateDiagonalSum, isCircularPalindrome, decryptEmoji } from './utils/helper';
+import {
+  calculateDiagonalSum,
+  isCircularPalindrome,
+  decryptEmoji,
+  generateSelfNumber,
+  isSelfNumber
+} from './utils/helper';
 
 import './App.css';
 
 function App() {
   const [stone, setStone] = useState({ count: 0, matrix: [] });
   const [isPalindrome, setIsPalindrome] = useState(false);
-  const [decript, setDecrypt] = useState('');
+  const [decrypt, setDecrypt] = useState('');
+  const [selfNumber, setSelfNumber] = useState([]);
+  const [isSelfNumberData, setIsSelfNumber] = useState(false);
 
   const { register, handleSubmit } = useForm();
 
@@ -24,6 +32,16 @@ function App() {
   const handleDecryptEmoji = useCallback((data) => {
     const results = decryptEmoji(data.decrypt);
     setDecrypt(results);
+  }, []);
+
+  const handleCalculateSelfNumber = useCallback((data) => {
+    const res = isSelfNumber(data.selfNumber, selfNumber);
+    setIsSelfNumber(res);
+  }, [selfNumber]);
+
+  useEffect(() => {
+    const data = generateSelfNumber();
+    setSelfNumber(data);
   }, []);
 
   return (
@@ -64,20 +82,39 @@ function App() {
           />
           <button className="button" type="submit">Submit</button>
         </form>
-        <h2>Result: {isPalindrome ? 'True' : 'False'}</h2>
+        <h2>Check Result: {isPalindrome ? 'True' : 'False'}</h2>
+      </div>
+      <div className="app-container">
+        <h1>Case 4: Unveiling the Secrets of Self-Numbers</h1>
+        <form className="app-wrapper" onSubmit={handleSubmit(handleCalculateSelfNumber)}>
+          <input
+            className="input"
+            type="number"
+            placeholder="Masukan angka"
+            {...register("selfNumber")}
+          />
+          <button className="button" type="submit">Submit</button>
+        </form>
+        <h2>Check Result: {isSelfNumberData ? 'The number is self number' : 'The number is not self number'}</h2>
+        <h2>Self Number Categories 1 - 4999:</h2>
+        <div className="list">
+          {selfNumber?.map((number) => (
+            <div className="list-item" key={number}>{number}</div>
+          ))}
+        </div>
       </div>
       <div className="app-container">
         <h1>Case 5:  Decrypting the Emoji Code</h1>
         <form className="app-wrapper" onSubmit={handleSubmit(handleDecryptEmoji)}>
           <input
-              className="input"
-              type="text"
-              placeholder="Input kata dan emoji"
-              {...register("decrypt")}
+            className="input"
+            type="text"
+            placeholder="Input kata dan emoji"
+            {...register("decrypt")}
           />
           <button className="button" type="submit">Submit</button>
         </form>
-        <h2>Result: {decript}</h2>
+        <h2>Check Result: {decrypt}</h2>
       </div>
     </div>
   );

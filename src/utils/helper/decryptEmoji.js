@@ -53,7 +53,7 @@ const listEmoji = [
   },
   {
     emoji: '☄️',
-    text: 'keep it secret',
+    text: 'blast off',
   },
   {
     emoji: '🧑‍🍳+🍴',

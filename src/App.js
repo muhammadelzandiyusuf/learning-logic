@@ -1,12 +1,13 @@
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { calculateDiagonalSum, isCircularPalindrome } from './utils/helper';
+import { calculateDiagonalSum, isCircularPalindrome, decryptEmoji } from './utils/helper';
 
 import './App.css';
 
 function App() {
   const [stone, setStone] = useState({ count: 0, matrix: [] });
   const [isPalindrome, setIsPalindrome] = useState(false);
+  const [decript, setDecrypt] = useState('');
 
   const { register, handleSubmit } = useForm();
 
@@ -18,6 +19,11 @@ function App() {
   const handlePalindrome = useCallback((data) => {
     const results = isCircularPalindrome(data.palindrome);
     setIsPalindrome(results)
+  }, []);
+
+  const handleDecryptEmoji = useCallback((data) => {
+    const results = decryptEmoji(data.decrypt);
+    setDecrypt(results);
   }, []);
 
   return (
@@ -59,6 +65,19 @@ function App() {
           <button className="button" type="submit">Submit</button>
         </form>
         <h2>Result: {isPalindrome ? 'True' : 'False'}</h2>
+      </div>
+      <div className="app-container">
+        <h1>Case 5:  Decrypting the Emoji Code</h1>
+        <form className="app-wrapper" onSubmit={handleSubmit(handleDecryptEmoji)}>
+          <input
+              className="input"
+              type="text"
+              placeholder="Input kata dan emoji"
+              {...register("decrypt")}
+          />
+          <button className="button" type="submit">Submit</button>
+        </form>
+        <h2>Result: {decript}</h2>
       </div>
     </div>
   );

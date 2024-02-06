@@ -1,41 +1,65 @@
 import { useCallback, useState } from 'react';
-import { calculateDiagonalSum } from './utils/helper';
+import { useForm } from 'react-hook-form';
+import { calculateDiagonalSum, palindrome } from './utils/helper';
+
 import './App.css';
 
 function App() {
-  const [number, setNumber] = useState(0);
   const [stone, setStone] = useState({ count: 0, matrix: [] });
+  const [isPalindrome, setIsPalindrome] = useState(false);
 
-  const handleChangeNumber = useCallback((event) => {
-    const { value } = event.target;
-    setNumber(value);
-  }, [])
+  const { register, handleSubmit } = useForm();
 
-  const handleSubmit = useCallback(() => {
-    const results = calculateDiagonalSum(number);
+  const handleCalculateMatrix = useCallback((data) => {
+    const results = calculateDiagonalSum(data.number);
     setStone(results)
-  }, [number]);
+  }, []);
+
+    const handlePalindrome = useCallback((data) => {
+        const results = palindrome(data.palindrome);
+        setIsPalindrome(results)
+    }, []);
 
   return (
     <div className="app">
-      <h1>Case 1: Unearthing the Philosopher's Stone</h1>
-      <div className="app-wrapper">
-        <input className="input" type="number" placeholder="Masukan jumlah N" onChange={handleChangeNumber} />
-        <button className="button" onClick={handleSubmit}>Submit</button>
+      <div className="app-container">
+        <h1>Case 1: Unearthing the Philosopher's Stone</h1>
+        <form className="app-wrapper" onSubmit={handleSubmit(handleCalculateMatrix)}>
+          <input
+            className="input"
+            type="number"
+            placeholder="Masukan jumlah N"
+            {...register("number")}
+          />
+          <button className="button" type="submit">Submit</button>
+        </form>
+        {stone.count > 0 && (
+          <>
+            <h2>Count: {stone.count}</h2>
+            <h2>Matrix:</h2>
+            {stone.matrix?.map((item, index) => (
+              <div className="list" key={index}>
+                {item?.map((size) => (
+                   <div className="list-item" key={size}>{size}</div>
+                ))}
+              </div>
+            ))}
+          </>
+        )}
       </div>
-      {stone.count > 0 && (
-        <>
-          <h2>Count: {stone.count}</h2>
-          <h2>Matrix:</h2>
-          {stone.matrix?.map((item, index) => (
-            <div className="list" key={index}>
-              {item?.map((size) => (
-                <div className="list-item" key={size}>{size}</div>
-              ))}
-            </div>
-          ))}
-        </>
-      )}
+      <div className="app-container">
+        <h1>Case 3:  The Never ending Palindrome Quest</h1>
+        <form className="app-wrapper" onSubmit={handleSubmit(handlePalindrome)}>
+          <input
+            className="input"
+            type="text"
+            placeholder="Input kata"
+            {...register("palindrome")}
+          />
+          <button className="button" type="submit">Submit</button>
+        </form>
+        <h2>Result: {isPalindrome ? 'True' : 'False'}</h2>
+      </div>
     </div>
   );
 }

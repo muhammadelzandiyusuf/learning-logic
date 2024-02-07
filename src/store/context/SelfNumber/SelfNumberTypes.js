@@ -1,0 +1,1 @@
+export const GET_SELF_NUMBER = 'GET_SELF_NUMBER'

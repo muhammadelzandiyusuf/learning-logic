@@ -1,20 +1,22 @@
-import {useCallback, useEffect, useState} from 'react';
-import { useForm } from 'react-hook-form';
+import {useCallback, useContext, useEffect, useState} from 'react';
+import {useForm} from 'react-hook-form';
 import {
   calculateDiagonalSum,
-  isCircularPalindrome,
   decryptEmoji,
   generateSelfNumber,
+  isCircularPalindrome,
   isSelfNumber
 } from './utils/helper';
+import SelfNumberContext from './store/context/SelfNumber/SelfNumberContext';
+import {addDbCollection, localDb, tbName} from "./utils/localbase";
 
 import './App.css';
 
 function App() {
+  const { data: selfNumberData, getSelfNumber } = useContext(SelfNumberContext)
   const [stone, setStone] = useState({ count: 0, matrix: [] });
   const [isPalindrome, setIsPalindrome] = useState(false);
   const [decrypt, setDecrypt] = useState('');
-  const [selfNumber, setSelfNumber] = useState([]);
   const [isSelfNumberData, setIsSelfNumber] = useState(false);
 
   const { register, handleSubmit } = useForm();
@@ -35,14 +37,48 @@ function App() {
   }, []);
 
   const handleCalculateSelfNumber = useCallback((data) => {
-    const res = isSelfNumber(data.selfNumber, selfNumber);
+    const res = isSelfNumber(data.selfNumber, selfNumberData);
     setIsSelfNumber(res);
-  }, [selfNumber]);
+  }, [selfNumberData]);
+
+  const getPromiseSelfNumber = useCallback((from, to) => {
+    return new Promise((resolve) => {
+      const data = generateSelfNumber(from, to);
+      resolve(data);
+    });
+  }, []);
 
   useEffect(() => {
-    const data = generateSelfNumber();
-    setSelfNumber(data);
-  }, []);
+    const doGetSelfNumber = async () => {
+      const p1 = getPromiseSelfNumber(1, 1000);
+      const p2 = getPromiseSelfNumber(1001, 2000);
+      const p3 = getPromiseSelfNumber(2001, 3000);
+      const p4 = getPromiseSelfNumber(3001, 4000);
+      const p5 = getPromiseSelfNumber(4001, 5000);
+
+      const [
+        selfNumber1,
+        selfNumber2,
+        selfNumber3,
+        selfNumber4,
+        selfNumber5
+      ] = await Promise.all([p1, p2, p3, p4, p5]);
+
+      return [...selfNumber1, ...selfNumber2, ...selfNumber3, ...selfNumber4, ...selfNumber5];
+    }
+
+    localDb.collection(tbName).get().then((collections) => {
+      if (collections.length === 0) {
+        const dataList = doGetSelfNumber();
+        dataList.then((res) => {
+          addDbCollection(tbName, { data: res });
+          getSelfNumber(res);
+        })
+      } else {
+        getSelfNumber(collections[0]['data']);
+      }
+    });
+  }, [getPromiseSelfNumber, getSelfNumber]);
 
   return (
     <div className="app">
@@ -98,7 +134,7 @@ function App() {
         <h2>Check Result: {isSelfNumberData ? 'The number is self number' : 'The number is not self number'}</h2>
         <h2>Self Number Categories 1 - 4999:</h2>
         <div className="list">
-          {selfNumber?.map((number) => (
+          {selfNumberData?.map((number) => (
             <div className="list-item" key={number}>{number}</div>
           ))}
         </div>

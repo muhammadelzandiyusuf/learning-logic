@@ -1,5 +1,3 @@
-const endNumber = 4999;
-
 function sumNumber(n) {
     const number = n.toString().split('');
     let results = 0;
@@ -12,25 +10,29 @@ function sumNumber(n) {
     return results;
 }
 
-function calculateSelfNumber() {
+function calculateSelfNumber(from, to) {
     let results = [];
-
-    Array.from(Array(endNumber)).forEach((_, i) => {
-        const sum = sumNumber(i + 1);
+    let start = from;
+    while (start <= to) {
+        const sum = sumNumber(start);
         results.push(sum);
-    })
+        start++;
+    }
 
     return results;
 }
 
-export function generateSelfNumber() {
-    const data = calculateSelfNumber();
+export function generateSelfNumber(from, to) {
+    const data = calculateSelfNumber(from, to);
     let results = [];
+    let start = from;
 
-    Array.from(Array(endNumber)).forEach((_, i) => {
-        const sum = data.find((item) => item === i + 1);
-        if (sum === undefined) results.push(i + 1);
-    })
+    while (start <= to) {
+        // eslint-disable-next-line no-loop-func
+        const sum = data.find(item => item === start);
+        if (sum === undefined) results.push(start);
+        start++;
+    }
 
     return results;
 }
